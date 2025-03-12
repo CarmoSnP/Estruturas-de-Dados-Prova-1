@@ -61,7 +61,14 @@ void VectorList<T>::push_back(const T& value) {
 }
 
 template <class T>
-void VectorList<T>::pop_back() {}
+void VectorList<T>::pop_back() {
+    if (empty()) {
+        throw std::out_of_range(" a lista esta vazia");
+    }
+    _size--;
+}
+
+
 
 template <class T>
 void VectorList<T>::print() const {
@@ -71,8 +78,50 @@ void VectorList<T>::print() const {
   std::cout << "\n";
 }
 
+
+/*codigo dando esse erro  nao precisa de verificao do empty
+  [ RUN      ] VectorListTest.InsertExceedingCapacity
+/workspaces/Estruturas-de-Dados-Prova-1/test/vector_list.cpp:92: Failure
+Expected: vec->insert(2, 6) throws an exception of type std::length_error.
+  Actual: it throws std::out_of_range with description " a lista esta cheia".
+[  FAILED  ] VectorListTest.InsertExceedingCapacity (0 ms)
+*/
+// template <class T>
+// void VectorList<T>::insert(size_t index, const T& value) {
+//   if (size() >= capacity()){
+//     throw std::out_of_range(" a lista esta cheia");
+//   } else if(index == size()) {
+//     return push_back(value);
+//   } if (index > size()){
+//     throw std:: out_of_range("possicao nao existe");
+//   }
+//   for(size_t i = size(); i> index; i--){
+//     data[i] = data[i - 1];
+//   }
+
+//   data[index] = value;
+//   size++;
+// }
+
+//mudei a orden das verificações e foi, o comflito podia ser na parte das verificalcoes a orden importa ?
 template <class T>
-void VectorList<T>::insert(size_t index, const T& value) {}
+void VectorList<T>::insert(size_t index, const T& value) {
+   if (size() >= capacity()) {
+        throw std::length_error("a lista esta cheia");
+    } else if (index > size()) {
+        throw std::out_of_range("a possisao e invalida");
+    }
+
+    if (index == size()) {
+        return push_back(value);
+    }
+
+    for (size_t i = size(); i > index; i--) {
+        data[i] = data[i - 1];
+    }
+    data[index] = value;
+    _size++;
+}
 
 template <class T>
 void VectorList<T>::remove(size_t index) {

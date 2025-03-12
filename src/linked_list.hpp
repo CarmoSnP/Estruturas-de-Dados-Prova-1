@@ -19,10 +19,9 @@ LinkedList<T>::Node::Node(const T& value) : value{value}, next{nullptr} {}
 
 template <class T>
 LinkedList<T>::Node::~Node() {
-  if (next != nullptr) {
-    delete next;
-  }
+    next = nullptr;
 }
+
 
 template <class T>
 size_t LinkedList<T>::size() const {
@@ -47,7 +46,29 @@ void LinkedList<T>::push_front(const T& value) {
 
 // O( n ) linear
 template <class T>
-void LinkedList<T>::insert(size_t index, const T& value) {}
+void LinkedList<T>::insert(size_t index, const T &value) {
+    if (index > _size) {
+        throw std::out_of_range("a casa nao e valida");
+    }
+
+    if (index == 0 || head == nullptr) {
+        push_front(value);
+        return;
+    }
+
+    Node* aux = head;
+    Node* aux2 = nullptr;
+
+    for (size_t i = 0; i < index && aux != nullptr; i++) {
+        aux2 = aux;
+        aux = aux->next;
+    }
+
+    Node* new_node = new Node(value);
+    new_node->next = aux;
+    aux2->next = new_node;
+    _size++;
+}
 
 template <class T>
 void LinkedList<T>::print() const {
@@ -61,7 +82,15 @@ void LinkedList<T>::print() const {
 
 // O( 1 ) Constante
 template <class T>
-void LinkedList<T>::pop_front() {}
+void LinkedList<T>::pop_front() {
+    if (empty()) {
+        throw std::out_of_range("a lista esta vazia");
+    }
+    Node* aux = head;
+    head = head->next;
+    delete aux;
+    _size--;
+}
 
 // O( n ) Linear
 template <class T>
@@ -201,3 +230,4 @@ LinkedList<T>& LinkedList<T>::operator=(const LinkedList<T>& other) {
   _size = other.size();
   return *this;
 }
+
